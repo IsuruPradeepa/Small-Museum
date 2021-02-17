@@ -13,9 +13,9 @@ GLfloat y = -20.0f;
 GLfloat z = 50.0f;
 
 // vertices for the small cube
-GLfloat p = 6.0f;
+GLfloat p = 3.0f;
 GLfloat q = 6.0f;
-GLfloat r = 6.0f;
+GLfloat r = 3.0f;
 
 // variables to move outermost Object Frame (to move all the rendered environment)
 GLfloat moveX = 0.0f;
@@ -44,7 +44,7 @@ GLfloat radius = 9.0;
 //An array to store the normal vector data for the faces
 GLfloat vNormal[3] = {};
 
-GLuint tex;
+GLuint tex1, tex2;
 
 void initTexture() {
 
@@ -68,8 +68,8 @@ void initTexture() {
         0, 0, 255, 255
     };
 
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    glGenTextures(1, &tex1);
+    glBindTexture(GL_TEXTURE_2D, tex1);
 
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -81,7 +81,7 @@ void initTexture() {
         GL_UNSIGNED_BYTE, image);
 
     // Use the following line in order to load the created texture map instead of the image
-    // glTexImage2D( GL_TEXTURE_2D, 0,GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );    
+    // glTexImage2D( GL_TEXTURE_2D, 0,GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data ); 
 
 }
 
@@ -92,7 +92,7 @@ void initLighting() {
     //Decalring the Ambient, Diffuse components of the LIght_0 and the position in the eye coordinate system
     GLfloat L0_Ambient[] = { 0.4, 0.4, 0.4, 1.0 };
     GLfloat L0_Diffuse[] = { 0.7, 0.7, 0.7, 1.0 };
-    GLfloat L0_postion[] = { 5, 5, 0, 1.0 };
+    GLfloat L0_postion[] = { -10.0, 6.0, -11.2, 1.0 };
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, L0_Ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, L0_Diffuse);
@@ -118,7 +118,7 @@ void initLighting() {
     GLfloat L2_Diffuse[] = { 0.7, 0.7, 0.7, 1.0 };
     GLfloat L2_Specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat L2_postion[] = { 0, 5, 5, 1.0 };
-    GLfloat L2_SpotDirection[] = { 0.0, -1.0, -1.0 };
+    GLfloat L2_SpotDirection[] = { -10.0, 5.0, -11.2 };
 
     glLightfv(GL_LIGHT2, GL_AMBIENT, L2_Ambient);
     glLightfv(GL_LIGHT2, GL_DIFFUSE, L2_Diffuse);
@@ -185,126 +185,9 @@ GLfloat* findNormal(GLfloat* a, GLfloat* b, GLfloat* c) {
     return calNormal(va, vb);
 }
 
-void DrawGrid() {
-    GLfloat ext = 20.0f;
-    GLfloat step = 1.0f;
-    GLfloat yGrid = -0.45f;
-    GLint line, line_x;
-
-    glPushMatrix();
-    glColor3f(0.3, 0.3, 0.3);
-    glRotatef(-90, 1, 0, 0);
-    glTranslatef(0.0, 0.0, yGrid);
-    for (line = -ext; line <= ext; line += step) {
-        for (line_x = -ext; line_x <= ext; line_x += step) {
-            glRectf(line_x + 0.02, line + 0.02, line_x + step - 0.02, line + step - 0.02);
-        }
-
-    }
-
-    glPopMatrix();
-
-}
-
-void drawPyramid() {
-    glBegin(GL_TRIANGLES);
-    {
-        GLfloat front[3][3] = {
-            {-2.5, 0, 2.5},
-            {2.5, 0, 2.5},
-            {0, 4.0, 0}
-        };
-
-        glNormal3fv(findNormal(front[0], front[1], front[2]));
-        glTexCoord2f(0, 0);
-        glVertex3fv(front[0]);
-        glTexCoord2f(1, 0);
-        glVertex3fv(front[1]);
-        glTexCoord2f(0.5, 1);
-        glVertex3fv(front[2]);
-    }
-
-    {
-        GLfloat back[3][3] = {
-            {2.5, 0, -2.5},
-            {-2.5, 0, -2.5},
-            {0, 4.0, 0}
-        };
-
-        glNormal3fv(findNormal(back[0], back[1], back[2]));
-        glTexCoord2f(0, 0);
-        glVertex3fv(back[0]);
-        glTexCoord2f(1, 0);
-        glVertex3fv(back[1]);
-        glTexCoord2f(0.5, 1);
-        glVertex3fv(back[2]);
-    }
-
-    {
-        GLfloat left[3][3] = {
-            {-2.5, 0, -2.5},
-            {-2.5, 0, 2.5},
-            {0, 4.0, 0}
-        };
-
-        glNormal3fv(findNormal(left[0], left[1], left[2]));
-        glTexCoord2f(0, 0);
-        glVertex3fv(left[0]);
-        glTexCoord2f(1, 0);
-        glVertex3fv(left[1]);
-        glTexCoord2f(0.3, 1);
-        glVertex3fv(left[2]);
-    }
-
-    {
-        GLfloat right[3][3] = {
-            {2.5, 0, 2.5},
-            {2.5, 0, -2.5},
-            {0, 4.0, 0}
-        };
-
-        glNormal3fv(findNormal(right[0], right[1], right[2]));
-        glTexCoord2f(0, 0);
-        glVertex3fv(right[0]);
-        glTexCoord2f(1, 0);
-        glVertex3fv(right[1]);
-        glTexCoord2f(0.5, 1);
-        glVertex3fv(right[2]);
-    }
-
-
-    glEnd();
-}
-
-
-/*
-Use this function to identify the transformations(translation/ rotation/ scaling) if needed
-(call this function at the place you need to determine the orientation of the axes)
-*/
-void drawAxes() {
-
-    glBegin(GL_LINES);
-
-    glLineWidth(1.5);
-
-    glColor3f(1.0, 0.0, 0.0);
-    glVertex3f(-20, 0, 0);
-    glVertex3f(20, 0, 0);
-
-    glColor3f(0.0, 1.0, 0.0);
-    glVertex3f(0, -20, 0);
-    glVertex3f(0, 20, 0);
-
-    glColor3f(0.0, 0.0, 1.0);
-    glVertex3f(0, 0, -20);
-    glVertex3f(0, 0, 20);
-
-    glEnd();
-}
-
 void drawCube() {
     // glTranslatef(0.0, 1.6, 0.0);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    glBindTexture(GL_TEXTURE_2D, tex1);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -328,7 +211,7 @@ void drawCube() {
 
     // LEFT
     glBegin(GL_QUADS);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.0, 1.0, 1.0);
     glVertex3f(-x, -y, -z);
     glVertex3f(-x, y, -z);
     glVertex3f(-x, y, z);
@@ -338,7 +221,7 @@ void drawCube() {
 
     //Right
     glBegin(GL_QUADS);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.0, 1.0, 1.0);
     glVertex3f(x, y, z);
     glVertex3f(x, y, -z);
     glVertex3f(x, -y, -z);
@@ -361,7 +244,7 @@ void drawCube() {
 
     //Top
     glBegin(GL_QUADS);
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3f(1.0, 0.5, 0.0);
     glVertex3f(x, -y, z);
     glVertex3f(x, -y, -z);
     glVertex3f(-x, -y, -z);
@@ -369,15 +252,15 @@ void drawCube() {
     glEnd();
 }
 
-void drawSmallCube() {
+void drawSmallCube(float p, float q, float r) {
     // glTranslatef(0.0, 1.6, 0.0);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    glBindTexture(GL_TEXTURE_2D, tex1);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     // BACK
     glBegin(GL_QUADS);
-    glColor3f(0.4f, 0.3f, 0.5f);
+    glColor3f(0.1f, 0.1f, 0.0f);
     glVertex3f(p, q, r);
     glVertex3f(p, -q, r);
     glVertex3f(-p, -q, r);
@@ -386,7 +269,7 @@ void drawSmallCube() {
 
     // FRONT
     glBegin(GL_QUADS);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.0f);
     glVertex3f(p, q, -r);
     glVertex3f(-p, q, -r);
     glVertex3f(-p, -q, -r);
@@ -395,7 +278,7 @@ void drawSmallCube() {
 
     // LEFT
     glBegin(GL_QUADS);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.0f);
     glVertex3f(-p, -q, -r);
     glVertex3f(-p, q, -r);
     glVertex3f(-p, q, r);
@@ -405,7 +288,7 @@ void drawSmallCube() {
 
     //Right
     glBegin(GL_QUADS);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.0f);
     glVertex3f(p, q, r);
     glVertex3f(p, q, -r);
     glVertex3f(p, -q, -r);
@@ -424,7 +307,7 @@ void drawSmallCube() {
 
     //Top
     glBegin(GL_QUADS);
-    glColor3f(0.0, 0.0, 0.0);
+    glColor3f(0.1f, 0.1f, 0.0f);
     glVertex3f(p, -q, r);
     glVertex3f(p, -q, -r);
     glVertex3f(-p, -q, -r);
@@ -432,72 +315,170 @@ void drawSmallCube() {
     glEnd();
 }
 
-void whiteAtom() {
-    glPushMatrix();
-    glRotatef(rot, 0.0f, 1.0f, 1.0f);
-    glColor3f(0.6f, 0.6f, 0.6f);
+void whiteCube(float p, float q, float r) {
+    // glTranslatef(0.0, 1.6, 0.0);
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glBegin(GL_LINES);
-    for (GLfloat i = 0; i <= PI * radius; i += 0.0001) {
-        glVertex3f(radius * cos(i), radius * sin(i), 0);
-    }
+    // BACK
+    glBegin(GL_QUADS);
+    glColor3f(1, 1, 1);
+    glVertex3f(p, q, r);
+    glVertex3f(p, -q, r);
+    glVertex3f(-p, -q, r);
+    glVertex3f(-p, q, r);
     glEnd();
 
-    glTranslatef(0.0, 9.0, 0.0);
-    glRotatef(rot, 0.0f, 1.0f, 1.0f);
-    glutSolidSphere(0.4, 100, 100);
+    // FRONT
+    glBegin(GL_QUADS);
+    glColor3f(1, 1, 1);
+    glVertex3f(p, q, -r);
+    glVertex3f(-p, q, -r);
+    glVertex3f(-p, -q, -r);
+    glVertex3f(p, -q, -r);
+    glEnd();
+
+    // LEFT
+    glBegin(GL_QUADS);
+    glColor3f(1, 1, 1);
+    glVertex3f(-p, -q, -r);
+    glVertex3f(-p, q, -r);
+    glVertex3f(-p, q, r);
+    glVertex3f(-p, -q, r);
+    glEnd();
+
+
+    //Right
+    glBegin(GL_QUADS);
+    glColor3f(1, 1, 1);
+    glVertex3f(p, q, r);
+    glVertex3f(p, q, -r);
+    glVertex3f(p, -q, -r);
+    glVertex3f(p, -q, r);
+    glEnd();
+
+
+    //Bottom
+    glBegin(GL_QUADS);
+    glColor3f(1, 1, 1);
+    glVertex3f(p, q, -r);
+    glVertex3f(p, q, r);
+    glVertex3f(-p, q, r);
+    glVertex3f(-p, q, -r);
+    glEnd();
+
+    //Top
+    glBegin(GL_QUADS);
+    glColor3f(1, 1, 1);
+    glVertex3f(p, -q, r);
+    glVertex3f(p, -q, -r);
+    glVertex3f(-p, -q, -r);
+    glVertex3f(-p, -q, r);
+    glEnd();
+}
+
+void dome() {
+    glColor3f(1, 1, 1);
+    GLUquadric* quad;
+    quad = gluNewQuadric();
+    gluSphere(quad, 5, 100, 25);
+
+    glTranslatef(0.0, 4.0, 0.0);
+    whiteCube(1.5, 1.5, 1.5);
+
+    glTranslatef(0.0, 1.0, 0.0);
+    glRotatef(-90.0, 1.0, 0.0, 0.0);
+    glutSolidCone(1.5, 3, 80, 100);
+
+}
+
+void necklace() {
+    glRotatef(-40.0, 0.0, 0.0, 1.0);
+    whiteCube(0.1, 2.4, 1.5);
+
+    glColor3f(1, 0, 1);
+    GLUquadric* quad;
+    quad = gluNewQuadric();
+    glPushMatrix();
+    glTranslatef(-0.1, 1.0, 0.0);
+    gluSphere(quad, 0.1, 100, 25);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(-0.1, 1.0, 1.0);
+    gluSphere(quad, 0.1, 100, 25);
     glPopMatrix();
 }
 
-void pinkAtom() {
-    glPushMatrix();
-    glRotatef(rot + 170, 0.0f, 1.0f, 1.0f);
-    glColor3f(0.6f, 0.0f, 0.6f);
+void Pyramid() {
+    glBegin(GL_TRIANGLES);
+    glColor4f(1, 1, 1, 1);
+    {
+        GLfloat front[3][3] = {
+            {-4.5, 0, 4.5},
+            {4.5, 0, 4.5},
+            {0, 6.0, 0}
+        };
 
-    glBegin(GL_LINES);
-    for (GLfloat i = 0; i <= PI * radius; i += 0.0001) {
-        glVertex3f(radius * cos(i), radius * sin(i), 0);
+        glNormal3fv(findNormal(front[0], front[1], front[2]));
+        glTexCoord2f(0, 0);
+        glVertex3fv(front[0]);
+        glTexCoord2f(1, 0);
+        glVertex3fv(front[1]);
+        glTexCoord2f(0.5, 1);
+        glVertex3fv(front[2]);
     }
-    glEnd();
 
-    glTranslatef(0.0, 9.0, 0.0);
-    glRotatef(rot + 170, 0.0f, 1.0f, 1.0f);
-    glutSolidSphere(0.4, 100, 100);
-    glPopMatrix();
-}
+    {
+        GLfloat back[3][3] = {
+            {4.5, 0, -4.5},
+            {-4.5, 0, -4.5},
+            {0, 6.0, 0}
+        };
 
-void yellowAtom() {
-    glPushMatrix();
-    glRotatef(rot + 90, 0.0f, 1.0f, 1.0f);
-    glColor3f(0.6f, 0.6f, 0.0f);
-
-    glBegin(GL_LINES);
-    for (GLfloat i = 0; i <= PI * radius; i += 0.0001) {
-        glVertex3f(radius * cos(i), radius * sin(i), 0);
+        glNormal3fv(findNormal(back[0], back[1], back[2]));
+        glTexCoord2f(0, 0);
+        glVertex3fv(back[0]);
+        glTexCoord2f(1, 0);
+        glVertex3fv(back[1]);
+        glTexCoord2f(0.5, 1);
+        glVertex3fv(back[2]);
     }
-    glEnd();
 
-    glTranslatef(0.0, 9.0, 0.0);
-    glRotatef(rot + 90, 0.0f, 1.0f, 1.0f);
-    glutSolidSphere(0.4, 100, 100);
-    glPopMatrix();
-}
+    {
+        GLfloat left[3][3] = {
+            {-4.5, 0, -4.5},
+            {-4.5, 0, 4.5},
+            {0, 6.0, 0}
+        };
 
-void blueAtom() {
-    glPushMatrix();
-    glRotatef(rot + 220, 0.0f, 1.0f, 1.0f);
-    glColor3f(0.0f, 0.6f, 0.6f);
-
-    glBegin(GL_LINES);
-    for (GLfloat i = 0; i <= PI * radius; i += 0.0001) {
-        glVertex3f(radius * cos(i), radius * sin(i), 0);
+        glNormal3fv(findNormal(left[0], left[1], left[2]));
+        glTexCoord2f(0, 0);
+        glVertex3fv(left[0]);
+        glTexCoord2f(1, 0);
+        glVertex3fv(left[1]);
+        glTexCoord2f(0.3, 1);
+        glVertex3fv(left[2]);
     }
-    glEnd();
 
-    glTranslatef(0.0, 9.0, 0.0);
-    glRotatef(rot + 220, 0.0f, 1.0f, 1.0f);
-    glutSolidSphere(0.4, 100, 100);
-    glPopMatrix();
+    {
+        GLfloat right[3][3] = {
+            {4.5, 0, 4.5},
+            {4.5, 0, -4.5},
+            {0, 6.0, 0}
+        };
+
+        glNormal3fv(findNormal(right[0], right[1], right[2]));
+        glTexCoord2f(0, 0);
+        glVertex3fv(right[0]);
+        glTexCoord2f(1, 0);
+        glVertex3fv(right[1]);
+        glTexCoord2f(0.5, 1);
+        glVertex3fv(right[2]);
+    }
+
+
+    glEnd();
 }
 
 void display() {
@@ -516,81 +497,71 @@ void display() {
     glRotatef(rotX, 1.0f, 0.0f, 0.0f);
     glRotatef(rotY, 0.0f, 1.0f, 0.0f);
     glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
-
-
     glColor3f(1.0, 1.0, 1.0);
-
-    //DrawGrid();
 
     //Cube
     glPushMatrix();
-    //glRotatef(animateRotation, 0.0, 1.0, 0.0);
     glTranslatef(0.0, 1.6, 0.0);
-
-
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    glBindTexture(GL_TEXTURE_2D, tex1);
     drawCube();
     glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-
-    //Torus(Doughnut)
-    glPushMatrix();
-    glColor3f(0.5, 0.5, 0.5);
-    glTranslatef(10.0, 3.0, 10.0);
-    glRotatef(-animateRotation, 0.0, 1.0, 0.0);
-    glutSolidTorus(1, 2, 50, 50);
-
-    glPopMatrix();
-
-    // Cone
-    glPushMatrix();
-    glColor3f(0.5, 0.7, 0.3);
-    glTranslatef(-10.0, 3.0, 10.0);
-    glRotatef(-animateRotation, 1.0, 0.0, 0.0);
-    glutSolidCone(1, 3, 80, 100);
-
-    glColor3f(0.7, 0.3, 0.5);
-    glRotatef(180.0, 1.0, 0.0, 0.0);
-    glutSolidCone(1, 3, 80, 100);
-
     glPopMatrix();
 
     //Teapot
     glPushMatrix();
-    glColor3f(0.9, 0.1, 0.5);
-    glTranslatef(10.0, 1.0, -10.0);
-    glRotatef(-animateRotation, 0.0, 1.0, 0.0);
-
+    glColor3f(0.1f, 0.0f, 0.0f);
+    glTranslatef(10.0, 1.8, -10.0);
+    //glRotatef(-animateRotation, 0.0, 1.0, 0.0);
     glTranslatef(0.0, 0.0, -1.0);
     glutSolidTeapot(1);
-
-
     glPopMatrix();
 
+    //Small Structure Base #1   -->>Teapot
     glPushMatrix();
-    glTranslatef(10.0, 1.0, -10.0);
-    glTranslatef(0.0, 0.0, -1.0);
-    drawSmallCube();
+    glTranslatef(10.0, -5.0, -11.2);
+    drawSmallCube(p, q, r);
     glPopMatrix();
 
-    drawAxes();
-
-
+    //Small Structure Base #2  -->>Pyramid
     glPushMatrix();
-    glColor3f(0.9, 0.1, 0.5);
-    glTranslatef(-15.0, 1.0, -10.0);
-    glRotatef(-animateRotation, 0.0, 1.0, 0.0);
-
-    glTranslatef(0.0, 0.0, -1.0);
-    whiteAtom();
-    blueAtom();
-    pinkAtom();
-    yellowAtom();
-
+    glTranslatef(-10.0, -5.0, 11.2);
+    drawSmallCube(p + 3, q, r + 3);
     glPopMatrix();
 
+    //Small Structure Base #3  -->>Necklace
+    glPushMatrix();
+    glTranslatef(10.0, -5.0, 11.2);
+    drawSmallCube(p, q, r);
+    glPopMatrix();
+
+    //Small Structure Base #4  -->>Dome
+    glPushMatrix();
+    glTranslatef(-10.0, -5.0, -11.2);
+    drawSmallCube(p + 3, q, r + 3);
+    glPopMatrix();
+
+    //Dome
+    glPushMatrix();
+    glTranslatef(-10.0, 0.0, -11.2);
+    dome();
+    glPopMatrix();
+
+    //Necklace
+    glPushMatrix();
+    glTranslatef(10.0, 2.9, 11.2);
+    necklace();
+    glPopMatrix();
+
+    //Pyramid
+    glPushMatrix();
+    glColor3f(0.1f, 0.0f, 1.0f);
+    glTranslatef(-10.0, 1.0, 11.2);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    Pyramid();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 
     glPopMatrix();
 
