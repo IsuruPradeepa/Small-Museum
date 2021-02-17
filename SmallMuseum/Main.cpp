@@ -648,7 +648,7 @@ int main(int argc, char** argv) {
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGBA);
-    glutCreateWindow("Introduction to Lighting");
+    glutCreateWindow("Small Museum");
     glutInitWindowSize(500, 500);
     glutInitWindowPosition(150, 150);
 
