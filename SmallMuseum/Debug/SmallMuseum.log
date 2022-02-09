@@ -1,4 +1,0 @@
-﻿  Main.cpp
-D:\CS Practicals\300 Level\CS308 Computer Graphics Programming\Git\Small-Museum\SmallMuseum\Main.cpp(40,1): warning C4005: 'PI': macro redefinition
-D:\CS Practicals\300 Level\CS308 Computer Graphics Programming\Git\Small-Museum\SmallMuseum\Main.cpp(8): message : see previous definition of 'PI'
-  SmallMuseum.vcxproj -> D:\CS Practicals\300 Level\CS308 Computer Graphics Programming\Git\Small-Museum\Debug\SmallMuseum.exe
